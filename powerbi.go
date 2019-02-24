@@ -1,7 +1,7 @@
 package main
 
 import (
-	con "PowerBi/contracts"
+	con "PowerBiGo/contracts"
 	"encoding/json"
 	"fmt"
 	"github.com/Azure/go-autorest/autorest/adal"
