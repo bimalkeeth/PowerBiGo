@@ -64,3 +64,15 @@ func (*ResCall) GetGroupById(credential *con.Credential, groupId string) (*con.G
 	_ = json.Unmarshal(body, resultGroups)
 	return resultGroups, nil
 }
+
+func (*ResCall) GetGroupByName(credential *con.Credential, groupId string) (*[]con.Groups, error) {
+
+	var auth au.IAuth = &Auth{}
+	authConfig, err := auth.Authorize(credential)
+	if err != nil {
+		log.Fatal("Error in authorising")
+	}
+	err = authConfig.Refresh()
+
+	return nil, nil
+}
