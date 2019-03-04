@@ -99,3 +99,11 @@ func (*ResCall) GetGroupByName(credential *con.Credential, name string) (*con.Gr
 	_ = json.Unmarshal(body, resultGroups)
 	return resultGroups, nil
 }
+
+//-------------------------------------------------
+//Create Group
+//-------------------------------------------------
+func (*ResCall) CreateGroup(credential *con.Credential, request con.GroupCreateRequest) (bool, error) {
+
+	return false, nil
+}
