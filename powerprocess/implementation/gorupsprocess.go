@@ -50,7 +50,11 @@ func (*ResCall) GetGroupById(credential *con.Credential, groupId string) (*con.G
 	}
 	err = authConfig.Refresh()
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", common.POWERBI_REST_GET_GROUPS+"?id="+groupId, nil)
+	req, _ := http.NewRequest("GET", common.POWERBI_REST_GET_GROUPS, nil)
+
+	q := req.URL.Query()
+	q.Add("filter", "id eq '"+groupId+"'")
+	req.URL.RawQuery = q.Encode()
 	response, err := client.Do(req)
 	if err != nil {
 		log.Fatal("request is not processed successfully")
@@ -65,7 +69,10 @@ func (*ResCall) GetGroupById(credential *con.Credential, groupId string) (*con.G
 	return resultGroups, nil
 }
 
-func (*ResCall) GetGroupByName(credential *con.Credential, groupId string) (*[]con.Groups, error) {
+//---------------------------------------------------
+// Get group by name
+//---------------------------------------------------
+func (*ResCall) GetGroupByName(credential *con.Credential, name string) (*con.Groups, error) {
 
 	var auth au.IAuth = &Auth{}
 	authConfig, err := auth.Authorize(credential)
@@ -73,6 +80,22 @@ func (*ResCall) GetGroupByName(credential *con.Credential, groupId string) (*[]c
 		log.Fatal("Error in authorising")
 	}
 	err = authConfig.Refresh()
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", common.POWERBI_REST_GET_GROUPS, nil)
+	query := req.URL.Query()
+	query.Add("filter", "name eq '"+name+"'")
+	req.URL.RawQuery = query.Encode()
 
-	return nil, nil
+	response, err := client.Do(req)
+	if err != nil {
+		log.Fatal("request is not processed successfully")
+	}
+	body, _ := ioutil.ReadAll(response.Body)
+	err = response.Body.Close()
+	if err != nil {
+		log.Fatal("Error in reading response")
+	}
+	resultGroups := &con.Groups{}
+	_ = json.Unmarshal(body, resultGroups)
+	return resultGroups, nil
 }
