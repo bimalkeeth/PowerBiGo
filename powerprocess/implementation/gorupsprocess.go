@@ -76,9 +76,9 @@ func (*ResCall) GetGroupByName(credential *con.Credential, name string) (*con.Gr
 
 	var auth au.IAuth = &Auth{}
 	authConfig, err := auth.Authorize(credential)
-	if err != nil {
-		log.Fatal("Error in authorising")
-	}
+
+	ErrorHandle(err, "Error in authorising")
+
 	err = authConfig.Refresh()
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", common.POWERBI_REST_GET_GROUPS, nil)
@@ -104,6 +104,15 @@ func (*ResCall) GetGroupByName(credential *con.Credential, name string) (*con.Gr
 //Create Group
 //-------------------------------------------------
 func (*ResCall) CreateGroup(credential *con.Credential, request con.GroupCreateRequest) (bool, error) {
+
+	var auth au.IAuth = &Auth{}
+	authConfig, err := auth.Authorize(credential)
+	if err != nil {
+		return false, err
+	}
+	err = authConfig.Refresh()
+	//client := &http.Client{}
+	//req, err := http.NewRequest("POST", common.POWERBI_REST_POST_GROUPS, nil)
 
 	return false, nil
 }
